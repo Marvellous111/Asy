@@ -108,8 +108,8 @@ export default function Home() {
                 OpenAI&apos;s latest agents or custom frameworks in Rust and Python.
               </p>
               <p className="mb-4">
-                In conclusion, Agentic AI isn't just a trend—it&apos;s a paradigm shift. As we navigate 2025,
-                embracing it could redefine your career. What's your take? Share in the comments below!
+                In conclusion, Agentic AI isn&apos;t just a trend—it&apos;s a paradigm shift. As we navigate 2025,
+                embracing it could redefine your career. What&apos;s your take? Share in the comments below!
               </p>
             </article>
           </main>
