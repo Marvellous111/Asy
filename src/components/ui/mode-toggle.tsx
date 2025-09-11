@@ -129,7 +129,11 @@ const Asy: React.FC<ModeToggleProps> = ({ children }) => {
   };
 
   return (
-    <div ref={contentRef} className="min-h-screen" style={{ fontSize: `${fontSize}rem`, filter: colorFilter }}>
+    <div 
+      ref={contentRef} 
+      className="min-h-screen" 
+      style={{ fontSize: `${fontSize}rem`, filter: colorFilter }}
+    >
       {children}
       {/* Hidden SVG for color blindness filters */}
       <svg style={{ display: 'none' }}>
