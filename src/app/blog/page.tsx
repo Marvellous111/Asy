@@ -32,7 +32,7 @@ export default function Home() {
 
               <p className="mb-4">
                 In the ever-evolving landscape of technology, few advancements have captured the programming
-                community's attention like Agentic AI. As we step into 2025, this trend—highlighted by Gartner's
+                community&apos;s attention like Agentic AI. As we step into 2025, this trend—highlighted by Gartner&apos;s
                 Top 10 Strategic Technology Trends—is poised to transform how developers build, debug, and
                 deploy software. But what exactly is Agentic AI, and why is it trending now?
               </p>
@@ -46,13 +46,13 @@ export default function Home() {
                 orchestration.
               </p>
               <p className="mb-4">
-                Think of it as an evolution of tools like GitHub Copilot. Today's agentic AI, powered by
+                Think of it as an evolution of tools like GitHub Copilot. Today&apos;s agentic AI, powered by
                 advanced large language models (LLMs) and reinforced learning, can manage entire workflows.
                 For instance, an agent might detect a bug in your codebase, suggest fixes, run tests, and
                 merge changes—all while learning from your preferences.
               </p>
 
-              <h2 className="text-2xl font-semibold mt-8 mb-4">Why It's Trending in the Programming Community</h2>
+              <h2 className="text-2xl font-semibold mt-8 mb-4">Why It&apos;s Trending in the Programming Community</h2>
               <p className="mb-4">
                 The programming community is buzzing about Agentic AI for several reasons. First, it addresses
                 the growing complexity of modern software stacks. With microservices, cloud-native apps, and
@@ -89,14 +89,14 @@ export default function Home() {
 
               <h2 className="text-2xl font-semibold mt-8 mb-4">Challenges and Considerations</h2>
               <p className="mb-4">
-                Despite the hype, Agentic AI isn't without hurdles. Ethical concerns, such as bias in
+                Despite the hype, Agentic AI isn&apos;t without hurdles. Ethical concerns, such as bias in
                 decision-making and job displacement, are hot topics in forums like DEV Community.
                 Reliability is another issue—agents might make erroneous decisions in complex scenarios,
                 requiring robust oversight.
               </p>
               <p className="mb-4">
                 Moreover, integrating these systems demands strong AI governance platforms to ensure
-                compliance and transparency. As O'Reilly Media's trends report notes, while Python and
+                compliance and transparency. As O&apos;Reilly Media&apos;s trends report notes, while Python and
                 machine learning dominate searches, the real challenge lies in scaling AI ethically.
               </p>
 
@@ -105,10 +105,10 @@ export default function Home() {
                 Looking ahead, Agentic AI will likely converge with other trends like post-quantum
                 cryptography and spatial computing, creating hybrid systems for secure, immersive
                 development environments. For programmers, staying ahead means experimenting with tools like
-                OpenAI's latest agents or custom frameworks in Rust and Python.
+                OpenAI&apos;s latest agents or custom frameworks in Rust and Python.
               </p>
               <p className="mb-4">
-                In conclusion, Agentic AI isn't just a trend—it's a paradigm shift. As we navigate 2025,
+                In conclusion, Agentic AI isn't just a trend—it&apos;s a paradigm shift. As we navigate 2025,
                 embracing it could redefine your career. What's your take? Share in the comments below!
               </p>
             </article>
