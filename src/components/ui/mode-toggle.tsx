@@ -5,6 +5,13 @@ import { useState, useRef, useEffect } from "react";
 import { AudioLines, Keyboard, X, Send } from "lucide-react";
 import { useTamboThreadInput, useTamboThread } from "@tambo-ai/react";
 
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
+
 
 interface ModeToggleProps {
   children: React.ReactNode; // We want to wrap content in modetoggle

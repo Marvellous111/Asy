@@ -24,7 +24,7 @@ To use Asy in your project, follow these steps:
 #### Prerequisites:
 
 - Node.js (v16 or higher)
-- A Tambo AI API key (sign up at https://tambo.ai)
+- A Tambo AI API key (sign up at https://tambo.co)
 - A React project (v18 or higher)
 
 
