@@ -2,6 +2,8 @@
 
 This is a starter NextJS app with Tambo hooked up to get your AI app development started quickly.
 
+## Please read Asy.md for details on Asy
+
 ## Get Started
 
 1. Run `npm create-tambo@latest my-tambo-app` for a new project

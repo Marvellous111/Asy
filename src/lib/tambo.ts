@@ -18,7 +18,9 @@ import {
 
 import { 
   resizeFont,
-  applyColorBlindnessFilter
+  applyColorBlindnessFilter,
+  reduceMotion,
+  setDyslexiaFont
 } from "@/services/asy-services";
 import type { TamboComponent } from "@tambo-ai/react";
 import { TamboTool } from "@tambo-ai/react";
@@ -111,8 +113,24 @@ export const tools: TamboTool[] = [
       ),
   },
   {
+    name: "setDyslexiaFont",
+    description:
+      "Changes the font if the user has or denotes by meaning that they may be dyslexic, it can also change the font back to normal from a dyslexic font",
+    tool: setDyslexiaFont,
+    toolSchema: z
+      .function()
+      .args(z.number().describe("The dyslexia font state (can be true or false), true sets it to a dyslexic font and false sets it to normal font"))
+      .returns(
+        z.object({
+          message: z.string(),
+          dyslexiaFont: z.boolean(),
+        })
+      ),
+  },
+  {
     name: "applyColorBlindnessFilter",
-    description: "Applies a CSS filter to adjust colors for color blindness. Call this when the user specifies a type like protanopia, deuteranopia, or tritanopia.",
+    description: 
+    "Applies a CSS filter to adjust colors for color blindness. Call this when the user specifies a type like protanopia, deuteranopia, or tritanopia, and when the user wants to reset the color or normalize it the color filter call will be normal",
     tool: applyColorBlindnessFilter,
     toolSchema: z
       .function()
@@ -125,9 +143,24 @@ export const tools: TamboTool[] = [
       ),
   },
   {
+    name: "reduceMotion",
+    description: 
+    "Changes the motion (transition) in the webpage depending on what the user wants. Set to true if motion should be reduced and set to false if there should be motion",
+    tool: reduceMotion,
+    toolSchema: z
+      .function()
+      .args(z.boolean().describe("Set the reduceMotion state to true or false"))
+      .returns(
+        z.object({
+          message: z.string(),
+          reduceMotion: z.boolean()
+        })
+      ),
+  },
+  {
     name: "readContent",
     description: "Triggers text-to-speech to read the page content aloud for blind users. Call this when the user asks to 'read the content' or mentions blindness.",
-    tool: () => {true, ""},
+    tool: () => {},
     toolSchema: z
       .function()
       .args()

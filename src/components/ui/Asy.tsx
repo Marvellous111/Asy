@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
-import { AudioLines, Keyboard, X, Send } from "lucide-react";
+import { AudioLines, Keyboard, X, Send, LoaderCircle } from "lucide-react";
 import { useTamboThreadInput, useTamboThread } from "@tambo-ai/react";
 
 declare global {
@@ -13,21 +13,24 @@ declare global {
 }
 
 
-interface ModeToggleProps {
+interface AsyProps {
   children: React.ReactNode; // We want to wrap content in modetoggle
 }
 
 
 
-const Asy: React.FC<ModeToggleProps> = ({ children }) => {
+const Asy: React.FC<AsyProps> = ({ children }) => {
   const [isTextMode, setIsTextMode] = useState(false);
   const [textInput, setTextInput] = useState("");
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [transcript, setTranscript] = useState("");
+  const [isTextSubmitting, setIsTextSubmitting] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [colorFilter, setColorFilter] = useState('');
+  const [isDyslexiaFont, setIsDyslexiaFont] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
   const { value, setValue, submit } = useTamboThreadInput();
   const { sendThreadMessage, thread } = useTamboThread();
   const [fontSize, setFontSize] = useState(1);
@@ -96,17 +99,34 @@ const Asy: React.FC<ModeToggleProps> = ({ children }) => {
   const handleSend = async () => {
     // Handle send action (e.g., process textInput)
     console.log("Text sent:", textInput);
+    console.log("trasncript sent", transcript);
     const query = isVoiceMode ? transcript : textInput;
     if (!query.trim()) return;
-    setValue(query);
+    // setValue(query);
 
-    await sendThreadMessage(query, {
-      streamResponse: true,
-    });
-    console.log("Tambo response:", thread);
+    if (isTextSubmitting == false) setIsTextSubmitting(true);
+    try {
+      await sendThreadMessage(query, {
+        streamResponse: true,
+      });
+      console.log("Tambo response:", thread);
+      console.log("info text submit:", isTextSubmitting)
+    } catch (error) {
+      console.error("Error occurred for tambo text: ", error);
+      if (isTextSubmitting) setIsTextSubmitting(false)
+      console.log("info text submit:", isTextSubmitting)
+    } finally {
+      if (isTextSubmitting) setIsTextSubmitting(false)
+      console.log("info text submit:", isTextSubmitting)
+    }
+    
 
     const toolResult = thread.messages[thread.messages.length - 2].content[0]
     console.log(toolResult)
+
+    if (isTextSubmitting) setIsTextSubmitting(false)
+
+    console.log("info text submit:", isTextSubmitting)
 
     const resultText = toolResult["text"];
 
@@ -116,11 +136,22 @@ const Asy: React.FC<ModeToggleProps> = ({ children }) => {
       const correctfontsize = jsonParsedText["newSize"];
       console.log(jsonParsedText)
       setFontSize(correctfontsize);
-    } else if (jsonParsedText["filterId"]) {
-      const filterId = jsonParsedText["filterId"];
-      setColorFilter(`url(#${filterId})`);
     }
-
+    if (jsonParsedText["filterId"]) {
+      const filterId = jsonParsedText["filterId"];
+      if (filterId !== ""){
+        setColorFilter(`url(#${filterId})`)
+      } else {
+        setColorFilter("url(#normal)")
+      }
+    }
+    if (jsonParsedText["dyslexiaFont"]) {
+      setIsDyslexiaFont(jsonParsedText["dyslexiaFont"])
+    }
+    if (jsonParsedText["reduceMotion"]) {
+      const reduceMotion = jsonParsedText["reduceMotion"];
+      setIsReducedMotion(reduceMotion)
+    }
     setTextInput("");
     setTranscript("");
   };
@@ -129,6 +160,7 @@ const Asy: React.FC<ModeToggleProps> = ({ children }) => {
     if (isListening && recognitionRef.current) {
       recognitionRef.current.stop();
       setIsListening(false);
+      handleSend()
     } else if (recognitionRef.current) {
       recognitionRef.current.start();
       setIsListening(true);
@@ -138,8 +170,15 @@ const Asy: React.FC<ModeToggleProps> = ({ children }) => {
   return (
     <div 
       ref={contentRef} 
-      className="min-h-screen" 
-      style={{ fontSize: `${fontSize}rem`, filter: colorFilter }}
+      className={
+        `${isReducedMotion ? "motion-reduce:transition-none motion-reduce:hover:transition-none" : ""}
+        ${isDyslexiaFont ? "dyslexia-font" : ""}
+        min-h-screen`
+      } 
+      style={{
+        fontSize: `${fontSize}rem`,
+        filter: colorFilter
+      }}
     >
       {children}
       {/* Hidden SVG for color blindness filters */}
@@ -148,11 +187,29 @@ const Asy: React.FC<ModeToggleProps> = ({ children }) => {
           <filter id="protanopia">
             <feColorMatrix type="matrix" values="0.567 0.433 0 0 0 0.558 0.442 0 0 0 0 0.242 0.758 0 0 0 0 0 1 0" />
           </filter>
+          <filter id="protanomaly">
+            <feColorMatrix type="matrix" values="0.817 0.183 0 0 0 0.333 0.667 0 0 0 0 0.125 0.875 0 0 0 0 0 1 0" />
+          </filter>
           <filter id="deuteranopia">
             <feColorMatrix type="matrix" values="0.625 0.375 0 0 0 0.7 0.3 0 0 0 0 0.3 0.7 0 0 0 0 0 1 0" />
           </filter>
+          <filter id="deuteranomaly">
+            <feColorMatrix type="matrix" values="0.8 0.2 0 0 0 0.258 0.742 0 0 0 0 0.142 0.858 0 0 0 0 0 1 0" />
+          </filter>
           <filter id="tritanopia">
             <feColorMatrix type="matrix" values="0.95 0.05 0 0 0 0 0.433 0.567 0 0 0 0.475 0.525 0 0 0 0 0 1 0" />
+          </filter>
+          <filter id="tritanomaly">
+            <feColorMatrix type="matrix" values="0.967 0.033 0 0 0 0 0.733 0.267 0 0 0 0.183 0.817 0 0 0 0 0 1 0" />
+          </filter>
+          <filter id="achromatopsia">
+            <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0 0.299 0.587 0.114 0 0 0.299 0.587 0.114 0 0 0 0 0 1 0" />
+          </filter>
+          <filter id="achromatomaly">
+            <feColorMatrix type="matrix" values="0.618 0.320 0.062 0 0 0.163 0.775 0.062 0 0 0.163 0.320 0.516 0 0 0 0 0 1 0" />
+          </filter>
+          <filter id="normal">
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />
           </filter>
         </defs>
       </svg>
@@ -191,9 +248,9 @@ const Asy: React.FC<ModeToggleProps> = ({ children }) => {
               )}
             </button>
             {transcript && (
-              <div className="absolute bottom-4 w-full px-4 text-center">
+              <div className="absolute left-[0px] bottom-4 w-full px-4 text-center">
                 <span
-                  className="text-black text-sm truncate max-w-full block animate-text-slide-up"
+                  className="text-black text-sm truncate max-w-full bg-grey-500 rounded-md block animate-text-slide-up"
                   style={{ animation: "textSlideUp 0.5s ease-in-out" }}
                 >
                   {transcript}
@@ -223,22 +280,41 @@ const Asy: React.FC<ModeToggleProps> = ({ children }) => {
                 className="w-full h-40 p-2 bg-inherit text-black rounded-lg resize-none focus:outline-none"
               />
               <button
-                title="send message"
+                title={isTextSubmitting ? "Sending message..." : "Send message to Tambo"}
                 onClick={handleSend}
-                disabled={!textInput.trim()}
+                aria-label={isTextSubmitting ? "Sending message..." : "Send message to Tambo"}
+                aria-busy={isTextSubmitting}
+                disabled={isTextSubmitting || !textInput.trim()}
                 className={`p-2 rounded-full w-full h-[40px] flex justify-center items-center-safe gap-3 transition-colors ${
-                  textInput.trim()
+                  isTextSubmitting
+                    ? "bg-gray-600 cursor-not-allowed"
+                    : textInput.trim()
                     ? "bg-black hover:bg-black cursor-pointer"
                     : "bg-gray-600 cursor-not-allowed"
                 }`}
               >
-                <Send
-                  strokeWidth={1.75}
-                  absoluteStrokeWidth
-                  size={16}
-                  className="text-white"
-                />
-                <span className="text-white">Send message to AI</span>
+                {isTextSubmitting ? (
+                  <div className="flex gap-3 w-full items-center justify-center">
+                    <LoaderCircle 
+                      strokeWidth={1.75}
+                      absoluteStrokeWidth
+                      size={16}
+                      className="text-white animate-spin"
+                    />
+                    <span className="text-white">Sending message</span>
+                  </div>
+                ) : (
+                  <div className="flex gap-3 w-full items-center justify-center">
+                    <Send
+                      strokeWidth={1.75}
+                      absoluteStrokeWidth
+                      size={16}
+                      className="text-white"
+                    />
+                    <span className="text-white">Send message to AI</span>
+                  </div>
+                )}
+                
               </button>
             </div>
           </>

@@ -2,7 +2,7 @@
 
 import { TamboProvider } from "@tambo-ai/react";
 import { components, tools } from "@/lib/tambo";
-import Asy from "@/components/ui/mode-toggle";
+import Asy from "@/components/ui/Asy";
 
 
 export default function Home() {
